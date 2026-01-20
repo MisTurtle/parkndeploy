@@ -1,0 +1,33 @@
+on: [pull_request]
+
+jobs:
+  verify_backend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK 9.0.x
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+    
+    - name: Compile the app
+      run: dotnet build -c Release --property:PublishDir=publish
+      working-directory: ./backend
+
+  verify_frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Build the app
+      run: npm install && npm run build
+      working-directory: ./frontend
+    
+    - name: Ensure lints
+      run: npm run lint
+      working-directory: ./frontend
