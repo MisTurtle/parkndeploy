@@ -16,15 +16,13 @@ function App() {
     queryFn: () => ParkingsAngersEndpointsQueryMethods.getAllParkings(parkingName),
   });
 
-  console.log(parkingName)
-
   return (
     <div className="flex flex-col gap-5 items-center">
       <h1 className="text-2xl font-bold text-center">
         Where can I Park in Angers ? 👀
       </h1>
       <h2 className="text-md italic text-center">
-        ParkNDeploy - Version {process.env.APP_VERSION}
+        ParkNDeploy - Version {import.meta.env.VITE_APP_VERSION}
       </h2>
       <ParkingListFilters
         onChange={(parkingName: string) => {
