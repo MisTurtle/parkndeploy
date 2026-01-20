@@ -29,13 +29,13 @@ jobs:
     
     - name: Change User
       run: |
-        git config --local user.name "github-actions[bot]" ||
+        git config --local user.name "github-actions[bot]" &&
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
     
     - name: Commit and push
       run: |
-        git add "frontend/package.json" ||
-        git commit -m "[AUTO] Update frontend/package.json version to ${{ github.ref }}" ||
+        git add "frontend/package.json" &&
+        git commit -m "[AUTO] Update frontend/package.json version to ${{ github.ref }}" &&
         git push
 
   build_backend_artifact:
