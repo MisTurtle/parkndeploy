@@ -132,7 +132,7 @@ jobs:
       uses: actions/download-artifact@v7
       id: download-frontend-artifact
       with:
-        name: ParkNDeploy.Api
+        name: ParkNDeploy.Front
 
     - name: Login to Azure 
       uses: azure/login@v2
