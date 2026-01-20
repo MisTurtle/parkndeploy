@@ -21,7 +21,7 @@ jobs:
     
     - name: Get Branch
       id: get-branch
-      run: echo "branch=$(git branch -r --contains ${{ github.ref_name }} --format "%(refname:lstrip=3)")" >> $GITHUB_OUTPUT
+      run: echo "branch=$(git branch -r --contains ${{ github.ref_name }} --format '%(refname:lstrip=3)')" >> $GITHUB_OUTPUT
 
     - name: Update package.json
       run: |
