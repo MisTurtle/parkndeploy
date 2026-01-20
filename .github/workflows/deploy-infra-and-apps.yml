@@ -19,8 +19,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     
-    - name: Checkout Branch
-      run: git checkout $(git branch -r --contains ${{ github.ref }} --format "%(refname:lstrip=3)")
+    - name: Get Branch
+      run: |
+        branch=$(git branch -r --contains ${{ github.ref }} --format "%(refname:lstrip=3)")
+        echo ::set-env name=BRANCH::$branch
 
     - name: Update package.json
       run: |
@@ -36,7 +38,7 @@ jobs:
       run: |
         git add "frontend/package.json" &&
         git commit -m "[AUTO] Update frontend/package.json version to ${{ github.ref }}" &&
-        git push
+        git push origin HEAD:${{ env.BRANCH }}
 
   build_backend_artifact:
     runs-on: ubuntu-latest
