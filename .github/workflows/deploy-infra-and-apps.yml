@@ -43,12 +43,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     
-    - name: Ensure lints
-      run: npm run lint
-      working-directory: ./frontend
-    
     - name: Build the app
       run: npm install && npm run build
+      working-directory: ./frontend
+
+    - name: Ensure lints
+      run: npm run lint
       working-directory: ./frontend
     
     - name: Publish Frontend Artifact
