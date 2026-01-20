@@ -23,6 +23,9 @@ function App() {
       <h1 className="text-2xl font-bold text-center">
         Where can I Park in Angers ? 👀
       </h1>
+      <h2 className="text-md italic text-center">
+        ParkNDeploy - Version {process.env.APP_VERSION}
+      </h2>
       <ParkingListFilters
         onChange={(parkingName: string) => {
           console.log(parkingName);
