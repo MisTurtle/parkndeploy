@@ -1,5 +1,8 @@
 name: Deploy Infra and Apps
 
+# This isn't ideal for our use case since the version on the main branch gets triggered
+# However, we basically cannot create release tags on the main branch since it is protected and dependabot will try to create commits
+# to automatically update the version tag
 on:
   workflow_run:
     workflows: [Build Artifacts]
