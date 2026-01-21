@@ -18,7 +18,7 @@ builder.Services.AddHttpClient<OpenDataAngersService>((serviceProvider, client) 
 // Build the dependency injection container and create the application
 var app = builder.Build();
 
-const string BASE_PATH = "/api";
+const string BASE_PATH = "/api"
 
 // Add Swagger middleware using base path
 app.UseSwagger(c =>
