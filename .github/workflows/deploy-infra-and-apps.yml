@@ -1,14 +1,9 @@
-on:
-  push:
-    tags:
-      - '[0-9]+.[0-9]+.[0-9]+'
-  workflow_dispatch:
+on: workflow_call
 
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
   
 jobs:
-
   persist_app_version:
     runs-on: ubuntu-latest
     environment: production
