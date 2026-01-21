@@ -1,100 +1,18 @@
+name: Deploy Infra and Apps
+
 on:
-  push:
-    tags:
-      - '[0-9]+.[0-9]+.[0-9]+'
-  workflow_dispatch:
+  workflow_run:
+    workflows: [Build Artifacts]
+    types: [completed]
 
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
-  
+
 jobs:
-
-  persist_app_version:
-    runs-on: ubuntu-latest
-    environment: production
-    permissions:
-      contents: write
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    
-    - name: Get Branch
-      id: get-branch
-      shell: bash
-      run: echo "branch=$(git branch -r --contains ${{ github.ref_name }} --format '%(refname:lstrip=3)')" >> $GITHUB_OUTPUT
-
-    - name: Update package.json
-      run: echo "$(jq '.version="${{ github.ref_name }}"' frontend/package.json)" > frontend/package.json
-    
-    - name: Change User
-      run: |
-        git config --local user.name "github-actions[bot]" &&
-        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    
-    - name: Commit and push
-      run: |
-        git add "frontend/package.json" &&
-        git commit -m "[AUTO] Update frontend/package.json version to ${{ github.ref_name }}" &&
-        git push origin HEAD:${{ steps.get-branch.outputs.branch }}
-
-  build_backend_artifact:
-    runs-on: ubuntu-latest
-    environment: production
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup .NET SDK 9.0.x
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-    
-    - name: Publish the app
-      run: dotnet publish -c Release --property:PublishDir=publish
-      working-directory: ./backend
-    
-    - name: Publish Backend Artifact
-      id: publish-backend-artifact
-      uses: actions/upload-artifact@v6
-      with:
-        name: ParkNDeploy.Api
-        path: ./backend/ParkNDeploy.Api/publish
-        if-no-files-found: error
-
-  build_frontend_artifact:
-    runs-on: ubuntu-latest
-    needs: persist_app_version
-    environment: production
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-    
-    - name: Build the app
-      run: npm install && VITE_APP_VERSION=${{ github.ref_name }} npm run build
-      working-directory: ./frontend
-
-    - name: Ensure lints
-      run: npm run lint
-      working-directory: ./frontend
-    
-    - name: Publish Frontend Artifact
-      id: publish-frontend-artifact
-      uses: actions/upload-artifact@v6
-      with:
-        name: ParkNDeploy.Front
-        path: ./frontend/dist
-        if-no-files-found: error
-
   deploy_infrastructure:
     runs-on: ubuntu-latest
     environment: production
-    needs: [ build_frontend_artifact, build_backend_artifact ]
-
+    
     permissions:
       id-token: write
 
