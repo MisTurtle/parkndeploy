@@ -91,3 +91,4 @@ jobs:
   call_deployment_workflow:
     needs: [build_backend_artifact, build_frontend_artifact]
     uses: ./.github/workflows/deploy-infra-and-apps.yml
+    secrets: inherit
