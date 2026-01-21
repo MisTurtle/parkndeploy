@@ -73,6 +73,7 @@ jobs:
       id: download-backend-artifact
       with:
         name: ParkNDeploy.Api
+        github-token: ${{ secrets.GH_PAT }}
         run-id: ${{ inputs.runId || github.run_id }}
 
     - name: Login to Azure 
