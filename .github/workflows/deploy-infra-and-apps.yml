@@ -1,4 +1,21 @@
-on: workflow_call
+on:
+  workflow_call:
+  workflow_dispatch:
+      inputs:
+        runId:
+          description: "Previous CI run_id to extract artifacts from"
+          required: false
+          type: number
+        
+        frontArtifact:
+          description: "Link to front-end artifact (Takes precedence over runId if both are specified)"
+          required: false
+          type: string
+        
+        backArtifact:
+          description: "Link to back-end artifact (Takes precedence over runId if both are speicifed)"
+          required: false
+          type: string
 
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
@@ -56,6 +73,8 @@ jobs:
       id: download-backend-artifact
       with:
         name: ParkNDeploy.Api
+        github-token: ${{ secrets.GH_PAT }}
+        run-id: ${{ inputs.runId || github.run_id }}
 
     - name: Login to Azure 
       uses: azure/login@v2
@@ -83,6 +102,8 @@ jobs:
       id: download-frontend-artifact
       with:
         name: ParkNDeploy.Front
+        github-token: ${{ secrets.GH_PAT }}
+        run-id: ${{ inputs.runId || github.run_id }}
 
     - name: Login to Azure 
       uses: azure/login@v2
